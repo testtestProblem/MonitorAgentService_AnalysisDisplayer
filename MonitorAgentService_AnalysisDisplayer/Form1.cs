@@ -199,9 +199,17 @@ namespace MonitorAgentService_AnalysisDisplayer
             lblWifi2.Text = wifi2Info;
         }
 
-        public List<string> FindBadSsdLogs(string folderPath)
+        //bad define
+        //SSD->health_status != green
+        //CPU->temperature > 55
+        //Fan->current_speed > 6500
+        public List<string> FindBadLogs(string folderPath)
         {
             var badFiles = new List<string>();
+
+            List<string> errorsSsdHealth = new List<string>();
+            List<string> errorsCpuTemp = new List<string>();
+            List<string> errorsFanSpeed = new List<string>();
 
             // 1. Get all JSON files in the folder
             if (!Directory.Exists(folderPath)) return badFiles;
@@ -218,14 +226,32 @@ namespace MonitorAgentService_AnalysisDisplayer
                     // Or use your existing LogData class if you prefer strict typing.
                     dynamic log = JsonConvert.DeserializeObject(content);
 
+                    // --- CRITERIA 1: SSD Health ---
                     // 4. Check the Condition: Is SSD Health NOT "green"?
                     // We use ?. to prevent crashing if "SSD" or "health_status" is missing.
-                    string health = (string)log?.SSD?.health_status;
-
+                    string health = (string)log?.SSD?.health_status; 
                     if (health == null || health.ToLower() != "green")
                     {
                         // It's a match! Add filename to list.
-                        badFiles.Add(Path.GetFileName(file));
+                        //badFiles.Add(Path.GetFileName(file));
+                        errorsSsdHealth.Add(Path.GetFileName(file)+ " "+ $"SSD Health: {health}");
+
+                    }
+
+                    // --- CRITERIA 2: CPU Temperature ---
+                    // Check if CPU temp > 55
+                    int cpuTemp = (int?)log?.CPU?.temperature ?? 0;
+                    if (cpuTemp > 55)
+                    {
+                        errorsCpuTemp.Add(Path.GetFileName(file) + " " + $"CPU Temp: {cpuTemp}°C");
+                    }
+
+                    // --- CRITERIA 3: Fan Speed ---
+                    // Check if Fan speed > 6500
+                    int fanSpeed = (int?)log?.Fan?.current_speed ?? 0;
+                    if (fanSpeed > 6500)
+                    {
+                        errorsFanSpeed.Add(Path.GetFileName(file) + " " + $"Fan Speed: {fanSpeed} RPM");
                     }
                 }
                 catch (Exception ex)
