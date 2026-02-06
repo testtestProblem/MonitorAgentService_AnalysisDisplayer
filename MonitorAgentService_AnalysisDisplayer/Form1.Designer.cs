@@ -42,6 +42,10 @@ namespace MonitorAgentService_AnalysisDisplayer
             this.lblSSD = new System.Windows.Forms.Label();
             this.btn_scanBadFile = new System.Windows.Forms.Button();
             this.lblSSDBadFile = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.lblWifi1 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.lblWifi2 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // lblSystem
@@ -79,7 +83,7 @@ namespace MonitorAgentService_AnalysisDisplayer
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("PMingLiU", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.label2.Location = new System.Drawing.Point(12, 238);
+            this.label2.Location = new System.Drawing.Point(12, 215);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(87, 21);
             this.label2.TabIndex = 5;
@@ -89,7 +93,7 @@ namespace MonitorAgentService_AnalysisDisplayer
             // 
             this.lblCPU.AutoSize = true;
             this.lblCPU.Font = new System.Drawing.Font("PMingLiU", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.lblCPU.Location = new System.Drawing.Point(12, 286);
+            this.lblCPU.Location = new System.Drawing.Point(12, 263);
             this.lblCPU.Name = "lblCPU";
             this.lblCPU.Size = new System.Drawing.Size(48, 19);
             this.lblCPU.TabIndex = 4;
@@ -99,7 +103,7 @@ namespace MonitorAgentService_AnalysisDisplayer
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("PMingLiU", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.label4.Location = new System.Drawing.Point(153, 238);
+            this.label4.Location = new System.Drawing.Point(321, 215);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(107, 21);
             this.label4.TabIndex = 7;
@@ -109,7 +113,7 @@ namespace MonitorAgentService_AnalysisDisplayer
             // 
             this.lblBattery.AutoSize = true;
             this.lblBattery.Font = new System.Drawing.Font("PMingLiU", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.lblBattery.Location = new System.Drawing.Point(153, 286);
+            this.lblBattery.Location = new System.Drawing.Point(321, 263);
             this.lblBattery.Name = "lblBattery";
             this.lblBattery.Size = new System.Drawing.Size(48, 19);
             this.lblBattery.TabIndex = 6;
@@ -119,7 +123,7 @@ namespace MonitorAgentService_AnalysisDisplayer
             // 
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("PMingLiU", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.label6.Location = new System.Drawing.Point(332, 238);
+            this.label6.Location = new System.Drawing.Point(144, 215);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(79, 21);
             this.label6.TabIndex = 11;
@@ -129,7 +133,7 @@ namespace MonitorAgentService_AnalysisDisplayer
             // 
             this.lblFan.AutoSize = true;
             this.lblFan.Font = new System.Drawing.Font("PMingLiU", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.lblFan.Location = new System.Drawing.Point(332, 286);
+            this.lblFan.Location = new System.Drawing.Point(144, 263);
             this.lblFan.Name = "lblFan";
             this.lblFan.Size = new System.Drawing.Size(48, 19);
             this.lblFan.TabIndex = 10;
@@ -139,7 +143,7 @@ namespace MonitorAgentService_AnalysisDisplayer
             // 
             this.label8.AutoSize = true;
             this.label8.Font = new System.Drawing.Font("PMingLiU", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.label8.Location = new System.Drawing.Point(540, 238);
+            this.label8.Location = new System.Drawing.Point(540, 215);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(85, 21);
             this.label8.TabIndex = 9;
@@ -149,7 +153,7 @@ namespace MonitorAgentService_AnalysisDisplayer
             // 
             this.lblSSD.AutoSize = true;
             this.lblSSD.Font = new System.Drawing.Font("PMingLiU", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.lblSSD.Location = new System.Drawing.Point(540, 286);
+            this.lblSSD.Location = new System.Drawing.Point(540, 263);
             this.lblSSD.Name = "lblSSD";
             this.lblSSD.Size = new System.Drawing.Size(48, 19);
             this.lblSSD.TabIndex = 8;
@@ -175,11 +179,55 @@ namespace MonitorAgentService_AnalysisDisplayer
             this.lblSSDBadFile.Size = new System.Drawing.Size(0, 19);
             this.lblSSDBadFile.TabIndex = 13;
             // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Font = new System.Drawing.Font("PMingLiU", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.label5.Location = new System.Drawing.Point(12, 432);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(140, 21);
+            this.label5.TabIndex = 16;
+            this.label5.Text = "Wifi card 1 Info";
+            // 
+            // lblWifi1
+            // 
+            this.lblWifi1.AutoSize = true;
+            this.lblWifi1.Font = new System.Drawing.Font("PMingLiU", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.lblWifi1.Location = new System.Drawing.Point(12, 480);
+            this.lblWifi1.Name = "lblWifi1";
+            this.lblWifi1.Size = new System.Drawing.Size(48, 19);
+            this.lblWifi1.TabIndex = 15;
+            this.lblWifi1.Text = "None";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("PMingLiU", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.label3.Location = new System.Drawing.Point(409, 432);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(140, 21);
+            this.label3.TabIndex = 18;
+            this.label3.Text = "Wifi card 2 Info";
+            // 
+            // lblWifi2
+            // 
+            this.lblWifi2.AutoSize = true;
+            this.lblWifi2.Font = new System.Drawing.Font("PMingLiU", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.lblWifi2.Location = new System.Drawing.Point(409, 480);
+            this.lblWifi2.Name = "lblWifi2";
+            this.lblWifi2.Size = new System.Drawing.Size(48, 19);
+            this.lblWifi2.TabIndex = 17;
+            this.lblWifi2.Text = "None";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(974, 546);
+            this.ClientSize = new System.Drawing.Size(974, 608);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.lblWifi2);
+            this.Controls.Add(this.label5);
+            this.Controls.Add(this.lblWifi1);
             this.Controls.Add(this.lblSSDBadFile);
             this.Controls.Add(this.btn_scanBadFile);
             this.Controls.Add(this.label6);
@@ -217,6 +265,10 @@ namespace MonitorAgentService_AnalysisDisplayer
         private System.Windows.Forms.Label lblSSD;
         private System.Windows.Forms.Button btn_scanBadFile;
         private System.Windows.Forms.Label lblSSDBadFile;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label lblWifi1;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label lblWifi2;
     }
 }
 

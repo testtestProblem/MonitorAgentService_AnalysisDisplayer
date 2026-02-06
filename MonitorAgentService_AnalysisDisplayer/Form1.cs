@@ -19,7 +19,7 @@ namespace MonitorAgentService_AnalysisDisplayer
         private LogData logData;
         private string logDataTempS = "";
 
-        private string systemInfo = "", cpuInfo = "", batteryInfo = "", ssdInfo = "", fanInfo = "";
+        private string systemInfo = "", cpuInfo = "", batteryInfo = "", ssdInfo = "", fanInfo = "", wifi1Info = "", wifi2Info = "";
         public Form1()
         {
             InitializeComponent();
@@ -172,13 +172,31 @@ namespace MonitorAgentService_AnalysisDisplayer
                           $"Max:     {logData.Fan.SpeedMax} RPM";
             }
 
-            // --- 6. Assign to your Labels ---
+            // --- 6. wifi1 and wifi2  Info ---
+            wifi1Info = "No Wi-Fi Data";
+            wifi2Info = "No Wi-Fi Data";
+            if (logData.Wifi1 != null)
+            {
+                wifi1Info = $"Name: {logData.Wifi1.TypeName}\n" +
+                          $"Driver:     {logData.Wifi1.DriverVersion}\n" +
+                          $"Serial:     {logData.Wifi1.SerialNumber}";
+            }
+            if (logData.Wifi2 != null)
+            {
+                wifi2Info = $"Name: {logData.Wifi2.TypeName}\n" +
+                          $"Driver:     {logData.Wifi2.DriverVersion}\n" +
+                          $"Serial:     {logData.Wifi2.SerialNumber}";
+            }
+
+            // --- 7. Assign to your Labels ---
             // Assuming you have created these labels in your Form Designer
             lblSystem.Text = systemInfo;
             lblCPU.Text = cpuInfo;
             lblBattery.Text = batteryInfo;
             lblSSD.Text = ssdInfo;
-            lblFan.Text = fanInfo; 
+            lblFan.Text = fanInfo;
+            lblWifi1.Text = wifi1Info;
+            lblWifi2.Text = wifi2Info;
         }
 
         public List<string> FindBadSsdLogs(string folderPath)
