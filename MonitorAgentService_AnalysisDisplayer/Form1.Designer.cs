@@ -46,6 +46,8 @@ namespace MonitorAgentService_AnalysisDisplayer
             this.lblWifi1 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.lblWifi2 = new System.Windows.Forms.Label();
+            this.lblCpuBadFile = new System.Windows.Forms.Label();
+            this.lblFanBadFile = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // lblSystem
@@ -219,11 +221,31 @@ namespace MonitorAgentService_AnalysisDisplayer
             this.lblWifi2.TabIndex = 17;
             this.lblWifi2.Text = "None";
             // 
+            // lblCpuBadFile
+            // 
+            this.lblCpuBadFile.AutoSize = true;
+            this.lblCpuBadFile.Font = new System.Drawing.Font("PMingLiU", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.lblCpuBadFile.Location = new System.Drawing.Point(819, 45);
+            this.lblCpuBadFile.Name = "lblCpuBadFile";
+            this.lblCpuBadFile.Size = new System.Drawing.Size(0, 19);
+            this.lblCpuBadFile.TabIndex = 19;
+            // 
+            // lblFanBadFile
+            // 
+            this.lblFanBadFile.AutoSize = true;
+            this.lblFanBadFile.Font = new System.Drawing.Font("PMingLiU", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.lblFanBadFile.Location = new System.Drawing.Point(942, 50);
+            this.lblFanBadFile.Name = "lblFanBadFile";
+            this.lblFanBadFile.Size = new System.Drawing.Size(0, 19);
+            this.lblFanBadFile.TabIndex = 20;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(974, 608);
+            this.ClientSize = new System.Drawing.Size(1121, 608);
+            this.Controls.Add(this.lblFanBadFile);
+            this.Controls.Add(this.lblCpuBadFile);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.lblWifi2);
             this.Controls.Add(this.label5);
@@ -269,6 +291,8 @@ namespace MonitorAgentService_AnalysisDisplayer
         private System.Windows.Forms.Label lblWifi1;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label lblWifi2;
+        private System.Windows.Forms.Label lblCpuBadFile;
+        private System.Windows.Forms.Label lblFanBadFile;
     }
 }
 

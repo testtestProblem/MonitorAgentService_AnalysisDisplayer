@@ -80,14 +80,33 @@ namespace MonitorAgentService_AnalysisDisplayer
                     string selectedFilePath_scanBadSsd = folderDialog.SelectedPath;
 
                     // 1. Run the scan
-                    List<string> badSsdLogs = FindBadSsdLogs(selectedFilePath_scanBadSsd);
+                    List<List<string>> allScanResults = FindBadLogs(selectedFilePath_scanBadSsd);
 
                     // 2. Show Results
-                    if (badSsdLogs.Count > 0)
+                    if (allScanResults.Count > 0)
                     {
-                        string message = "Found issues in these files:\n" + string.Join("\n", badSsdLogs);
+                        List<string> ssdErrors = allScanResults[0];
+                        List<string> cpuErrors = allScanResults[1];
+                        List<string> fanErrors = allScanResults[2];
+
+                        // --- CHANGE 3: Display Logic ---
+                        // You can now display them separately
+                        string msg = "";
+
+                        if (ssdErrors.Count > 0)
+                            msg += $"[SSD Issues]:{string.Join("\n", ssdErrors)}\n\n";
+
+                        if (cpuErrors.Count > 0)
+                            msg += $"[CPU Overheat]:{string.Join("\n", cpuErrors)}\n\n";
+
+                        if (fanErrors.Count > 0)
+                            msg += $"[High Fan Speed]:{string.Join("\n", fanErrors)}";
+
+                        string message = "Found issues in these files:\n" + string.Join("\n", msg);
                         MessageBox.Show(message, "SSD Health Alert", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        lblSSDBadFile.Text = string.Join("\n", badSsdLogs);
+                        lblSSDBadFile.Text = string.Join("\n", ssdErrors);
+                        lblSSDBadFile.Text += string.Join("\n", cpuErrors);
+                        lblSSDBadFile.Text += string.Join("\n", fanErrors);
                     }
                     else
                     {
@@ -203,13 +222,15 @@ namespace MonitorAgentService_AnalysisDisplayer
         //SSD->health_status != green
         //CPU->temperature > 55
         //Fan->current_speed > 6500
-        public List<string> FindBadLogs(string folderPath)
+        public List<List<string>> FindBadLogs(string folderPath)
         {
-            var badFiles = new List<string>();
+            //var badFiles = new List<string>();
+            List<List<string>> badFiles = new List<List<string>>();
 
             List<string> errorsSsdHealth = new List<string>();
             List<string> errorsCpuTemp = new List<string>();
             List<string> errorsFanSpeed = new List<string>();
+
 
             // 1. Get all JSON files in the folder
             if (!Directory.Exists(folderPath)) return badFiles;
@@ -241,7 +262,7 @@ namespace MonitorAgentService_AnalysisDisplayer
                     // --- CRITERIA 2: CPU Temperature ---
                     // Check if CPU temp > 55
                     int cpuTemp = (int?)log?.CPU?.temperature ?? 0;
-                    if (cpuTemp > 55)
+                    if (health == null || cpuTemp > 55)
                     {
                         errorsCpuTemp.Add(Path.GetFileName(file) + " " + $"CPU Temp: {cpuTemp}°C");
                     }
@@ -249,7 +270,7 @@ namespace MonitorAgentService_AnalysisDisplayer
                     // --- CRITERIA 3: Fan Speed ---
                     // Check if Fan speed > 6500
                     int fanSpeed = (int?)log?.Fan?.current_speed ?? 0;
-                    if (fanSpeed > 6500)
+                    if (health == null || fanSpeed > 6500)
                     {
                         errorsFanSpeed.Add(Path.GetFileName(file) + " " + $"Fan Speed: {fanSpeed} RPM");
                     }
@@ -260,6 +281,10 @@ namespace MonitorAgentService_AnalysisDisplayer
                     Console.WriteLine($"Skipping {file}: {ex.Message}");
                 }
             }
+
+            badFiles.Add(errorsSsdHealth);
+            badFiles.Add(errorsCpuTemp);
+            badFiles.Add(errorsFanSpeed);
 
             return badFiles;
         }
