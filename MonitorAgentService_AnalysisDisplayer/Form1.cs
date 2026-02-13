@@ -27,7 +27,108 @@ namespace MonitorAgentService_AnalysisDisplayer
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            // ---------------------------------------------------------
+            // PART 1: Auto-Load the Latest JSON File (View Details)
+            // ---------------------------------------------------------
 
+            // 1. Define the default directory
+            string folderPath = @"C:\ProgramData\UserData\logs\WinMate\";
+
+            try
+            {
+                // 2. Check if the directory exists
+                if (Directory.Exists(folderPath))
+                {
+                    DirectoryInfo dirInfo = new DirectoryInfo(folderPath);
+
+                    // 3. Find the latest .json file (Sort by LastWriteTime descending)
+                    FileInfo latestFile = dirInfo.GetFiles("*.json")
+                                                 .OrderByDescending(f => f.LastWriteTime)
+                                                 .FirstOrDefault();
+
+                    // 4. If a file is found, load it automatically
+                    if (latestFile != null)
+                    {
+                        selectedFilePath = latestFile.FullName;
+
+                        // Call your existing helper functions
+                        logData = LoadAndFillLogData(selectedFilePath);
+
+                        if (logData != null)
+                        {
+                            DumpLogDataToString(logData);
+
+                            // Optional: Update window title to show what loaded
+                            this.Text = $"Analysis Displayer - {latestFile.Name}";
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Fail silently or show error if auto-load crashes
+                Console.WriteLine("Auto-load failed: " + ex.Message);
+            }
+
+
+            // ---------------------------------------------------------
+            // PART 2: Auto-Scan for Bad Files (SSD/CPU/Fan Issues)
+            // ---------------------------------------------------------
+            try
+            {
+                if (Directory.Exists(folderPath))
+                {
+                    // Call your list-of-lists function
+                    List<List<string>> allScanResults = FindBadLogs(folderPath);
+
+                    // Safety check: Ensure we got 3 lists back
+                    if (allScanResults != null && allScanResults.Count >= 3)
+                    {
+                        List<string> ssdErrors = allScanResults[0];
+                        List<string> cpuErrors = allScanResults[1];
+                        List<string> fanErrors = allScanResults[2];
+
+                        // Combine them for the Label display
+                        StringBuilder sbBadFiles = new StringBuilder();
+
+                        if (ssdErrors.Count > 0)
+                        {
+                            sbBadFiles.AppendLine("--- SSD ISSUES ---");
+                            sbBadFiles.AppendLine(string.Join("\n", ssdErrors));
+                        }
+                        if (cpuErrors.Count > 0)
+                        {
+                            sbBadFiles.AppendLine("\n--- CPU OVERHEAT ---");
+                            sbBadFiles.AppendLine(string.Join("\n", cpuErrors));
+                        }
+                        if (fanErrors.Count > 0)
+                        {
+                            sbBadFiles.AppendLine("\n--- HIGH FAN SPEED ---");
+                            sbBadFiles.AppendLine(string.Join("\n", fanErrors));
+                        }
+
+                        // Update the Label
+                        if (sbBadFiles.Length > 0)
+                        {
+                            lblSSDBadFile.Text = sbBadFiles.ToString();
+                            lblSSDBadFile.ForeColor = Color.Red; // Highlight red if errors found
+
+                            // Optional: Pop up a warning immediately
+                            // MessageBox.Show("System issues detected on startup!", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        }
+                        else
+                        {
+                            lblSSDBadFile.Text = "System Healthy: No Bad Logs Found.";
+                            lblSSDBadFile.ForeColor = Color.Green;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                lblSSDBadFile.Text = "Auto-scan failed.";
+                Console.WriteLine("Auto-scan failed: " + ex.Message);
+            }
         }
 
         private void btn_openManual_Click(object sender, EventArgs e)
