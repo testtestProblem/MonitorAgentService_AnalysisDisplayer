@@ -319,19 +319,36 @@ namespace MonitorAgentService_AnalysisDisplayer
             lblWifi2.Text = wifi2Info;
         }
 
-        //bad define
-        //SSD->health_status != green
-        //CPU->temperature > 55
+        //bad define 
+        //SSD->name == ""
+        //SSD->health_status != green 
+        //SSD->temperature > 55 
+        //CPU->alert != 0
         //Fan->current_speed > 6500
+        //Battery->health != green 
+        //Battery->temp > 55 
+        //Wifi1->name == ""
+        //Wifi2->name == ""
         public List<List<string>> FindBadLogs(string folderPath)
         {
             //var badFiles = new List<string>();
             List<List<string>> badFiles = new List<List<string>>();
 
+            List<string> errorsSsdName = new List<string>();
             List<string> errorsSsdHealth = new List<string>();
-            List<string> errorsCpuTemp = new List<string>();
+            List<string> errorsSsdTemp = new List<string>();
+
+            //List<string> errorsCpuTemp = new List<string>();
+            List<string> errorsCpuAlerts = new List<string>();
+
             List<string> errorsFanSpeed = new List<string>();
 
+            List<string> errorsBatHealth = new List<string>();
+            List<string> errorsBatTemp = new List<string>();
+
+            List<string> errorsWifi1Name = new List<string>();
+
+            List<string> errorsWifi2Name = new List<string>();
 
             // 1. Get all JSON files in the folder
             if (!Directory.Exists(folderPath)) return badFiles;
@@ -348,33 +365,74 @@ namespace MonitorAgentService_AnalysisDisplayer
                     // Or use your existing LogData class if you prefer strict typing.
                     dynamic log = JsonConvert.DeserializeObject(content);
 
-                    // --- CRITERIA 1: SSD Health ---
-                    // 4. Check the Condition: Is SSD Health NOT "green"?
+                    string fileName = Path.GetFileName(file);
+                    // 4. Check the each Condition------------------------------------
                     // We use ?. to prevent crashing if "SSD" or "health_status" is missing.
-                    string health = (string)log?.SSD?.health_status; 
-                    if (health == null || health.ToLower() != "green")
-                    {
-                        // It's a match! Add filename to list.
-                        //badFiles.Add(Path.GetFileName(file));
-                        errorsSsdHealth.Add(Path.GetFileName(file)+ " "+ $"SSD Health: {health}");
 
+                    // --- SSD Name ---
+                    string ssdName = (string)log?.SSD?.name;
+                    if (string.IsNullOrWhiteSpace(ssdName))
+                    {
+                        errorsSsdName.Add($"{fileName} SSD Name: Missing or Empty");
                     }
 
-                    // --- CRITERIA 2: CPU Temperature ---
-                    // Check if CPU temp > 55
-                    int cpuTemp = (int?)log?.CPU?.temperature ?? 0;
-                    if (health == null || cpuTemp > 55)
+                    // --- SSD Health ---
+                    string ssdHealth = (string)log?.SSD?.health_status;
+                    if (ssdHealth == null || ssdHealth.ToLower() != "green")
                     {
-                        errorsCpuTemp.Add(Path.GetFileName(file) + " " + $"CPU Temp: {cpuTemp}°C");
+                        errorsSsdHealth.Add($"{fileName} SSD Health: {ssdHealth ?? "Null"}");
                     }
 
-                    // --- CRITERIA 3: Fan Speed ---
-                    // Check if Fan speed > 6500
+                    // --- SSD Temperature ---
+                    int ssdTemp = (int?)log?.SSD?.temperature ?? 0;
+                    if (ssdTemp > 55)
+                    {
+                        errorsSsdTemp.Add($"{fileName} SSD Temp: {ssdTemp}°C");
+                    }
+
+                    // --- CPU Alert --- (Assuming 'alert' maps to 'temperature_count' in your JSON)
+                    int cpuAlert = (int?)log?.CPU?.temperature_count ?? 0;
+                    if (cpuAlert != 0)
+                    {
+                        errorsCpuAlerts.Add($"{fileName} CPU Alert Count: {cpuAlert}");
+                    }
+
+                    // --- Fan Speed ---
                     int fanSpeed = (int?)log?.Fan?.current_speed ?? 0;
-                    if (health == null || fanSpeed > 6500)
+                    if (fanSpeed > 6500)
                     {
-                        errorsFanSpeed.Add(Path.GetFileName(file) + " " + $"Fan Speed: {fanSpeed} RPM");
+                        errorsFanSpeed.Add($"{fileName} Fan Speed: {fanSpeed} RPM");
                     }
+
+                    // --- Battery Health ---
+                    string batHealth = (string)log?.Battery?.health_status;
+                    if (batHealth == null || batHealth.ToLower() != "green")
+                    {
+                        errorsBatHealth.Add($"{fileName} Battery Health: {batHealth ?? "Null"}");
+                    }
+
+                    // --- Battery Temperature ---
+                    int batTemp = (int?)log?.Battery?.temperature ?? 0;
+                    if (batTemp > 55)
+                    {
+                        errorsBatTemp.Add($"{fileName} Battery Temp: {batTemp}°C");
+                    }
+
+                    // --- Wifi 1 Name ---
+                    string wifi1Name = (string)log?.Wifi_card_1?.type_name;
+                    if (string.IsNullOrWhiteSpace(wifi1Name))
+                    {
+                        errorsWifi1Name.Add($"{fileName} Wi-Fi 1 Name: Missing or Empty");
+                    }
+
+                    // --- Wifi 2 Name ---
+                    string wifi2Name = (string)log?.Wifi_card_2?.type_name;
+                    if (string.IsNullOrWhiteSpace(wifi2Name))
+                    {
+                        errorsWifi2Name.Add($"{fileName} Wi-Fi 2 Name: Missing or Empty");
+                    }
+
+                    // ------------------------------------
                 }
                 catch (Exception ex)
                 {
@@ -383,9 +441,16 @@ namespace MonitorAgentService_AnalysisDisplayer
                 }
             }
 
-            badFiles.Add(errorsSsdHealth);
-            badFiles.Add(errorsCpuTemp);
-            badFiles.Add(errorsFanSpeed);
+            // WARNING: The order you add them here is the order you must extract them via index [0], [1], etc.
+            badFiles.Add(errorsSsdName);     // Index 0
+            badFiles.Add(errorsSsdHealth);   // Index 1
+            badFiles.Add(errorsSsdTemp);     // Index 2
+            badFiles.Add(errorsCpuAlerts);   // Index 3
+            badFiles.Add(errorsFanSpeed);    // Index 4
+            badFiles.Add(errorsBatHealth);   // Index 5
+            badFiles.Add(errorsBatTemp);     // Index 6
+            badFiles.Add(errorsWifi1Name);   // Index 7
+            badFiles.Add(errorsWifi2Name);   // Index 8
 
             return badFiles;
         }
